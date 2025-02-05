@@ -87,7 +87,22 @@ function App() {
 
       getCart();
     } catch (error) {
-      alert('刪除購物車失敗');
+      alert('刪除購物車品項失敗');
+    }
+  }
+
+  const updateCartItem = async (cartItem_id,product_id,qty) => { 
+    try {
+      await axios.put(`${BASE_URL}/v2/api/${API_PATH}/cart/${cartItem_id}`, {
+        data: {
+          product_id,
+          qty: Number(qty),
+        },
+      });
+
+      getCart();
+    } catch (error) {
+      alert('更新購物車品項失敗');
     }
   }
 
@@ -224,7 +239,9 @@ function App() {
                 <td style={{ width: "150px" }}>
                   <div className="d-flex align-items-center">
                     <div className="btn-group me-2" role="group">
-                      <button
+                        <button
+                          onClick={() => updateCartItem(cartItem.id, cartItem.product.id, cartItem.qty - 1)}
+                          disabled={cartItem.qty === 1}
                         type="button"
                         className="btn btn-outline-dark btn-sm"
                       >
@@ -234,7 +251,8 @@ function App() {
                         className="btn border border-dark"
                         style={{ width: "50px", cursor: "auto" }}
                         >{ cartItem.qty}</span>
-                      <button
+                        <button
+                          onClick={() => updateCartItem(cartItem.id,cartItem.product.id,cartItem.qty + 1)}
                         type="button"
                         className="btn btn-outline-dark btn-sm"
                       >
